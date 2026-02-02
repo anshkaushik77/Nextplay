@@ -1,10 +1,10 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GameCard from '../components/GameCard';
 import { useWatchlist } from '../hooks/useWatchlist';
 import gamesData from '../data/games.json';
 import SEO from '../components/SEO';
-import { Search, Filter, Clock, TrendingUp, Calendar, ChevronRight, Zap, Crown, Tag, Monitor, Scale, ArrowRight, Swords, Code } from 'lucide-react';
+import { Search, Filter, Clock, TrendingUp, Calendar, ChevronRight, Zap, Crown, Tag, Monitor, Scale, ArrowRight, Swords, Code, Gamepad2, Flame, Star, Sparkles } from 'lucide-react';
 import { getCanonicalUrl, slugify } from '../utils/seoHelpers';
 import { PLATFORM_FILTERS } from '../utils/constants';
 
@@ -105,131 +105,356 @@ const Home = () => {
                     games: gamesData.slice(0, 10)
                 }}
             />
-            {/* HERO SECTION */}
-            <section style={{ position: 'relative', minHeight: '60vh', overflow: 'hidden' }} className="hero-section">
-                {/* Background Image */}
+            {/* HERO SECTION - PREMIUM REVAMP */}
+            <section style={{ position: 'relative', minHeight: '85vh', overflow: 'hidden' }} className="hero-section">
+                {/* Animated Background Layers */}
                 <div
                     style={{
                         position: 'absolute',
                         inset: 0,
                         backgroundImage: `url(${featuredGame.image})`,
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        filter: 'brightness(0.4)'
+                        backgroundPosition: 'center top',
+                        filter: 'brightness(0.35) saturate(1.2)',
+                        transform: 'scale(1.05)',
+                        animation: 'heroZoom 20s ease-in-out infinite alternate'
                     }}
                 />
+
+                {/* Animated Gradient Mesh Overlay */}
                 <div
                     style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to bottom, rgba(10, 14, 23, 0.5) 0%, rgba(10, 14, 23, 0.9) 70%, #0a0e17 100%)'
+                        background: `
+                            radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+                            radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+                            radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%)
+                        `,
+                        animation: 'meshMove 8s ease-in-out infinite'
                     }}
                 />
 
-                <div className="container" style={{ position: 'relative', padding: '4rem 1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: '65vh' }}>
-                    {/* Badge */}
+                {/* Main Gradient Overlay */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(180deg, rgba(10, 14, 23, 0.4) 0%, rgba(10, 14, 23, 0.7) 40%, rgba(10, 14, 23, 0.95) 80%, #0a0e17 100%)'
+                    }}
+                />
+
+                {/* Floating Particles */}
+                <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+                    {[...Array(20)].map((_, i) => (
+                        <div
+                            key={i}
+                            style={{
+                                position: 'absolute',
+                                width: `${Math.random() * 4 + 2}px`,
+                                height: `${Math.random() * 4 + 2}px`,
+                                background: i % 3 === 0 ? '#06b6d4' : i % 3 === 1 ? '#f97316' : '#8b5cf6',
+                                borderRadius: '50%',
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                                opacity: Math.random() * 0.5 + 0.2,
+                                animation: `floatParticle ${Math.random() * 10 + 15}s linear infinite`,
+                                animationDelay: `${Math.random() * 5}s`,
+                                boxShadow: `0 0 ${Math.random() * 10 + 5}px currentColor`
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Animated Grid Lines */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundImage: `
+                            linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px)
+                        `,
+                        backgroundSize: '50px 50px',
+                        opacity: 0.5,
+                        maskImage: 'linear-gradient(to bottom, transparent, black 30%, black 70%, transparent)'
+                    }}
+                />
+
+                <div className="container" style={{ position: 'relative', padding: '6rem 1.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '85vh' }}>
+
+                    {/* Premium Badge with Glow */}
                     <div
+                        className="hero-badge"
                         style={{
                             display: 'inline-flex',
                             alignSelf: 'flex-start',
                             alignItems: 'center',
-                            gap: '0.5rem',
-                            padding: '0.5rem 1rem',
-                            background: 'rgba(249, 115, 22, 0.2)',
-                            border: '1px solid rgba(249, 115, 22, 0.4)',
-                            borderRadius: '4px',
+                            gap: '0.75rem',
+                            padding: '0.6rem 1.25rem',
+                            background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.1))',
+                            border: '1px solid rgba(249, 115, 22, 0.5)',
+                            borderRadius: '100px',
                             color: '#f97316',
-                            fontSize: '0.7rem',
+                            fontSize: '0.75rem',
                             fontWeight: 700,
-                            letterSpacing: '0.15em',
-                            marginBottom: '1rem'
+                            letterSpacing: '0.12em',
+                            marginBottom: '1.5rem',
+                            boxShadow: '0 0 30px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
+                            animation: 'badgePulse 3s ease-in-out infinite'
                         }}
                     >
-                        <Zap size={14} /> MOST ANTICIPATED 2026
+                        <Flame size={16} style={{ animation: 'flameFlicker 1.5s ease-in-out infinite' }} />
+                        <span>MOST ANTICIPATED 2026</span>
+                        <Sparkles size={14} />
                     </div>
 
-                    {/* Title */}
-                    <h1
-                        className="font-heading"
-                        style={{
-                            fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-                            fontWeight: 700,
-                            marginBottom: '1rem',
-                            lineHeight: 1,
-                            letterSpacing: '0.02em'
-                        }}
-                    >
-                        {featuredGame.title.toUpperCase()}
-                    </h1>
+                    {/* Animated Title with Shimmer */}
+                    <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+                        <h1
+                            className="font-heading hero-title"
+                            style={{
+                                fontSize: 'clamp(3rem, 10vw, 6rem)',
+                                fontWeight: 700,
+                                lineHeight: 0.95,
+                                letterSpacing: '-0.02em',
+                                background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #ffffff 100%)',
+                                backgroundSize: '200% 100%',
+                                WebkitBackgroundClip: 'text',
+                                backgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                animation: 'shimmer 3s ease-in-out infinite',
+                                textShadow: 'none',
+                                position: 'relative'
+                            }}
+                        >
+                            {featuredGame.title.toUpperCase()}
+                        </h1>
+                        {/* Glow effect behind title */}
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '0',
+                                transform: 'translateY(-50%)',
+                                width: '60%',
+                                height: '100%',
+                                background: 'radial-gradient(ellipse at left, rgba(6, 182, 212, 0.15), transparent 70%)',
+                                filter: 'blur(40px)',
+                                pointerEvents: 'none',
+                                zIndex: -1
+                            }}
+                        />
+                    </div>
 
-                    {/* Platforms */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                        {featuredGame.platforms.map(p => (
+                    {/* Platform Tags with Icons */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}>
+                        {featuredGame.platforms.map((p, idx) => (
                             <span
                                 key={p}
                                 style={{
-                                    padding: '0.4rem 0.75rem',
-                                    background: 'rgba(6, 182, 212, 0.15)',
-                                    border: '1px solid rgba(6, 182, 212, 0.3)',
-                                    borderRadius: '4px',
-                                    fontSize: '0.75rem',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.5rem 1rem',
+                                    background: 'rgba(6, 182, 212, 0.1)',
+                                    border: '1px solid rgba(6, 182, 212, 0.25)',
+                                    borderRadius: '8px',
+                                    fontSize: '0.8rem',
                                     fontWeight: 600,
-                                    color: '#06b6d4'
+                                    color: '#06b6d4',
+                                    backdropFilter: 'blur(10px)',
+                                    animation: `fadeSlideIn 0.5s ease-out ${idx * 0.1}s both`
                                 }}
                             >
+                                <Gamepad2 size={14} />
                                 {p}
                             </span>
                         ))}
                     </div>
 
-                    {/* Countdown */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-                        <div>
-                            <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600, letterSpacing: '0.1em' }}>RELEASE DATE</div>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>
-                                {featuredDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    {/* Premium Countdown Boxes */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                        gap: '1rem',
+                        marginBottom: '2.5rem',
+                        maxWidth: '600px'
+                    }}>
+                        {/* Days Box */}
+                        <div className="countdown-box" style={{
+                            background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05))',
+                            border: '1px solid rgba(249, 115, 22, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1.25rem',
+                            textAlign: 'center',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: '2px',
+                                background: 'linear-gradient(90deg, transparent, #f97316, transparent)'
+                            }} />
+                            <div style={{ fontSize: 'clamp(2rem, 5vw, 2.75rem)', fontWeight: 700, color: '#f97316', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
+                                {daysLeft}
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600, letterSpacing: '0.15em', marginTop: '0.5rem' }}>
+                                DAYS
                             </div>
                         </div>
-                        <div style={{ width: '1px', height: '40px', background: 'rgba(255,255,255,0.1)' }} />
-                        <div>
-                            <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600, letterSpacing: '0.1em' }}>COUNTDOWN</div>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f97316' }}>
-                                <Clock size={18} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle' }} />
-                                {daysLeft} DAYS
+
+                        {/* Release Date Box */}
+                        <div className="countdown-box" style={{
+                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.05))',
+                            border: '1px solid rgba(6, 182, 212, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1.25rem',
+                            textAlign: 'center',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: '2px',
+                                background: 'linear-gradient(90deg, transparent, #06b6d4, transparent)'
+                            }} />
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                <Calendar size={20} color="#06b6d4" />
+                            </div>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff', marginTop: '0.5rem', lineHeight: 1.2 }}>
+                                {featuredDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600, letterSpacing: '0.1em', marginTop: '0.25rem' }}>
+                                {featuredDate.getFullYear()}
                             </div>
                         </div>
-                        <div style={{ width: '1px', height: '40px', background: 'rgba(255,255,255,0.1)' }} />
-                        <div>
-                            <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600, letterSpacing: '0.1em' }}>TOTAL GAMES</div>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#06b6d4' }}>
+
+                        {/* Total Games Box */}
+                        <div className="countdown-box" style={{
+                            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))',
+                            border: '1px solid rgba(139, 92, 246, 0.3)',
+                            borderRadius: '16px',
+                            padding: '1.25rem',
+                            textAlign: 'center',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: '2px',
+                                background: 'linear-gradient(90deg, transparent, #8b5cf6, transparent)'
+                            }} />
+                            <div style={{ fontSize: 'clamp(2rem, 5vw, 2.75rem)', fontWeight: 700, color: '#8b5cf6', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
                                 {gamesData.length}+
+                            </div>
+                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600, letterSpacing: '0.15em', marginTop: '0.5rem' }}>
+                                GAMES
                             </div>
                         </div>
                     </div>
 
-                    {/* CTA */}
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    {/* Premium CTA Buttons */}
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                         <Link
                             to={`/game/${featuredGame.slug}`}
-                            className="btn-primary"
-                            style={{ textDecoration: 'none', flex: '1 1 auto', minWidth: '140px', maxWidth: '200px' }}
+                            className="hero-btn-primary"
+                            style={{
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                padding: '1rem 2rem',
+                                background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                                color: '#0a0e17',
+                                borderRadius: '12px',
+                                fontWeight: 700,
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: '0.95rem',
+                                letterSpacing: '0.05em',
+                                textTransform: 'uppercase',
+                                border: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 20px rgba(6, 182, 212, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}
                         >
-                            View Details
+                            <span style={{ position: 'relative', zIndex: 1 }}>View Details</span>
+                            <ArrowRight size={18} style={{ position: 'relative', zIndex: 1 }} />
                         </Link>
                         <button
                             onClick={() => toggleWatch(featuredGame.id)}
-                            className="btn-secondary"
+                            className="hero-btn-secondary"
                             style={{
-                                background: isWatched(featuredGame.id) ? 'rgba(6, 182, 212, 0.2)' : undefined,
-                                borderColor: isWatched(featuredGame.id) ? '#06b6d4' : undefined,
-                                color: isWatched(featuredGame.id) ? '#06b6d4' : undefined,
-                                flex: '1 1 auto',
-                                minWidth: '140px',
-                                maxWidth: '200px'
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                padding: '1rem 2rem',
+                                background: isWatched(featuredGame.id)
+                                    ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1))'
+                                    : 'rgba(255,255,255,0.05)',
+                                border: isWatched(featuredGame.id)
+                                    ? '1px solid rgba(6, 182, 212, 0.5)'
+                                    : '1px solid rgba(255,255,255,0.15)',
+                                borderRadius: '12px',
+                                color: isWatched(featuredGame.id) ? '#06b6d4' : '#fff',
+                                fontWeight: 700,
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: '0.95rem',
+                                letterSpacing: '0.05em',
+                                textTransform: 'uppercase',
+                                cursor: 'pointer',
+                                backdropFilter: 'blur(10px)',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                             }}
                         >
-                            {isWatched(featuredGame.id) ? '★ Watching' : '☆ Add to Watchlist'}
+                            <Star size={18} fill={isWatched(featuredGame.id) ? '#06b6d4' : 'none'} />
+                            {isWatched(featuredGame.id) ? 'Watching' : 'Add to Watchlist'}
                         </button>
+                    </div>
+
+                    {/* Scroll Indicator */}
+                    <div style={{
+                        position: 'absolute',
+                        bottom: '2rem',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        opacity: 0.6,
+                        animation: 'bounce 2s infinite'
+                    }}>
+                        <span style={{ fontSize: '0.7rem', color: '#64748b', letterSpacing: '0.15em', fontWeight: 600 }}>SCROLL</span>
+                        <div style={{
+                            width: '24px',
+                            height: '40px',
+                            border: '2px solid rgba(255,255,255,0.2)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            paddingTop: '8px'
+                        }}>
+                            <div style={{
+                                width: '4px',
+                                height: '8px',
+                                background: '#06b6d4',
+                                borderRadius: '2px',
+                                animation: 'scrollDot 1.5s infinite'
+                            }} />
+                        </div>
                     </div>
                 </div>
             </section>
